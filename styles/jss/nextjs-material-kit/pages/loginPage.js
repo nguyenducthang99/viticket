@@ -73,6 +73,8 @@ const signupPageStyle = {
     textAlign: "center",
   },
   cardFooter: {
+    display: "flex",
+    flexDirection: "column",
     paddingTop: "0rem",
     border: "0",
     borderRadius: "6px",

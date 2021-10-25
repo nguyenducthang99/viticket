@@ -22,6 +22,10 @@ import Head from "next/head";
 import Router from "next/router";
 import { ToastContainer } from 'react-toastify';
 
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from 'store';
+
 import PageChange from "components/admin/PageChange/PageChange.js";
 
 import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
@@ -80,20 +84,31 @@ export default class MyApp extends App {
 
     const Layout = Component.layout || (({ children }) => <>{children}</>);
 
+    const onBeforeLift = async () => {
+      console.log('Hello World!');
+    };
+
     return (
       <React.Fragment>
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-          <title>Trao đổi, mua bán vé sự kiện - Viticket</title>
-          <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-        </Head>
-        <Layout>
-          <Component {...pageProps} />
-          <ToastContainer />
-        </Layout>
+        <PersistGate onBeforeLift={onBeforeLift} loading={null} persistor={persistor}>
+          {() => (
+
+            <Provider store={store}>
+              <Head>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+                />
+                <title>Trao đổi, mua bán vé sự kiện - Viticket</title>
+                <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+              </Head>
+              <Layout>
+                <Component {...pageProps} />
+                <ToastContainer />
+              </Layout>
+            </Provider>
+          )}
+        </PersistGate>
       </React.Fragment>
     );
   }

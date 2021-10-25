@@ -34,6 +34,12 @@ const profilePageStyle = {
     boxShadow:
       "0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
   },
+  mainRaisedNext: {
+    margin: "25px 30px 0px",
+    borderRadius: "6px",
+    boxShadow:
+      "0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)",
+  },
   title: {
     ...title,
     display: "inline-block",
@@ -56,6 +62,21 @@ const profilePageStyle = {
   navWrapper: {
     margin: "20px auto 50px auto",
     textAlign: "center",
+  },
+  verifiedItem: {
+    cursor: "pointer",
+    padding: "8px 12px",
+    "&:hover": {
+      background: "#EEE",
+    },
+    "&:nth-child(even)": {
+      border: "1px solid #6200EE",
+      borderRightWidth: "5px",
+    },
+    "&:nth-child(odd)": {
+      border: "1px solid #03DAC6",
+      borderLeftWidth: "5px",
+    },
   },
 };
 

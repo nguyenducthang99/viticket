@@ -14,6 +14,7 @@ import GridItem from "components/public/Grid/GridItem.js";
 import Button from "components/public/CustomButtons/Button.js";
 import HeaderLinks from "components/public/Header/HeaderLinks.js";
 import Parallax from "components/public/Parallax/Parallax.js";
+import TopSearch from "components/public/TopSearch/index.js";
 
 import styles from "styles/jss/nextjs-material-kit/pages/landingPage.js";
 
@@ -49,6 +50,7 @@ export default function LandingPage(props) {
             <GridItem xs={12} sm={12} md={12}>
               <h1 className={classes.title}>Let's Make Live Happen.</h1>
               <h4>Shop millions of live events and discover can't-miss concerts, games, theater and more.</h4>
+              <TopSearch />
             </GridItem>
           </GridContainer>
         </div>

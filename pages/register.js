@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import Router from "next/router";
+import axios from "axios";
+import { toast } from 'react-toastify';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
-import { toast } from 'react-toastify';
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import People from "@material-ui/icons/People";
@@ -19,6 +21,8 @@ import CardBody from "components/public/Card/CardBody.js";
 import CardHeader from "components/public/Card/CardHeader.js";
 import CardFooter from "components/public/Card/CardFooter.js";
 import CustomInput from "components/public/CustomInput/CustomInput.js";
+
+import { API_URL } from "constants/commons.js";
 
 import styles from "styles/jss/nextjs-material-kit/pages/loginPage.js";
 
@@ -40,8 +44,44 @@ export default function LoginPage(props) {
     confirmPassword: '',
   });
 
-  const handleSubmit = () => {
-    checkValidate();
+  const handleSubmit = async () => {
+    const validate = checkValidate();
+    if (!validate) return;
+
+    const checkEmail = await axios.get(`${API_URL}/account/check-email/${state.email}`);
+    if (checkEmail.status === 200 && checkEmail.data) {
+      toast.error(`This email ${state.email} already in use!`);
+      return;
+    };
+
+    const checkPhone = await axios.get(`${API_URL}/account/check-phone/${state.phone}`);
+    if (checkPhone.status === 200 && checkPhone.data) {
+      toast.error(`This phone number ${state.phone} already in use!`);
+      return;
+    };
+
+    register();
+  };
+
+  const register = () => {
+    const newAccount = {
+      PK_iMaTaikhoan: new Date().getTime(),
+      sTenNguoidung: state.fullName,
+      sEmail: state.email,
+      sSodienthoai: state.phone,
+      sMatkhau: state.password,
+      FK_iMaTrangthai: 2,
+      FK_iMaQuyen: 1,
+    }
+    axios.post(`${API_URL}/account/tao-tai-khoan`, { newAccount })
+      .then(res => {
+        if (res.status === 200 && res.data) toast.success(`Register new account successfully!`);
+        Router.push('/login');
+      })
+      .catch(err => {
+        toast.error(`Somethings wrong when register, please try again!`);
+        console.error(err);
+      })
   };
 
   const checkValidate = () => {
@@ -50,6 +90,12 @@ export default function LoginPage(props) {
         toast.error(`${key} can't be empty!`);
         return;
       }
+    }
+
+    const checkValidateEmail = validateEmail(state.email);
+    if (!checkValidateEmail) {
+      toast.error(`Please enter a valid email address!`);
+      return;
     }
 
     if (state.password.length < 6) {
@@ -61,7 +107,14 @@ export default function LoginPage(props) {
       toast.error(`Password and confirm password does not match!`);
       return;
     }
+
+    return true;
   };
+
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
 
   const handleInputChange = (e, key) => {
     const newState = { ...state };

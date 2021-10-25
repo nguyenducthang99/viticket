@@ -1,5 +1,9 @@
-import React from "react";
-import Link from 'next/link'
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import Link from "next/link";
+import Router from "next/router";
+import axios from "axios";
+import { toast } from 'react-toastify';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -20,6 +24,8 @@ import CardHeader from "components/public/Card/CardHeader.js";
 import CardFooter from "components/public/Card/CardFooter.js";
 import CustomInput from "components/public/CustomInput/CustomInput.js";
 
+import { API_URL } from "constants/commons.js";
+import { setUserInfo } from "../store/actions/user"; 
 import styles from "styles/jss/nextjs-material-kit/pages/loginPage.js";
 
 const useStyles = makeStyles(styles);
@@ -31,6 +37,75 @@ export default function LoginPage(props) {
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
+
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
+    email: '',
+    password: '',
+  });
+
+  const userInfo = useSelector((state) => state.user.userInfo);
+
+  useEffect(() => {
+    if (userInfo) Router.push('/');
+  }, [userInfo]);
+
+  const handleOnSubmit = () => {
+    const validate = checkValidate();
+    if (!validate) return;
+
+    login();
+  };
+
+  const login = () => {
+    const userInfo = { email: state.email, password: state.password }
+
+    axios.post(`${API_URL}/account/check-dang-nhap`, userInfo)
+      .then((res) => {
+        if (res.data) {
+          const newUserInfo = res.data;
+          delete newUserInfo.sMatkhau;
+          dispatch(setUserInfo(newUserInfo));
+          toast.success(`Login successfully!`);
+        } else {
+          toast.error(`Username or password is incorrect!`);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error(`Somethings wrong, please check again!`);
+      })
+  };
+
+  const handleInputChange = (e, key) => {
+    const newState = { ...state };
+    newState[`${key}`] = e.target.value.trim();
+    setState(newState);
+  };
+
+  const checkValidate = () => {
+    for (const [key, value] of Object.entries(state)) {
+      if (value === '') {
+        toast.error(`${key} can't be empty!`);
+        return;
+      }
+    }
+
+    const checkValidateEmail = validateEmail(state.email);
+    if (!checkValidateEmail) {
+      toast.error(`Please enter a valid email address!`);
+      return;
+    }
+
+    return true;
+  }
+
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   return (
     <div>
       <Header
@@ -54,7 +129,7 @@ export default function LoginPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Login</h4>
+                    <h4>Sign In</h4>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
@@ -64,6 +139,7 @@ export default function LoginPage(props) {
                         fullWidth: true,
                       }}
                       inputProps={{
+                        onChange: (e) => handleInputChange(e, 'email'),
                         type: "email",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -79,6 +155,7 @@ export default function LoginPage(props) {
                         fullWidth: true,
                       }}
                       inputProps={{
+                        onChange: (e) => handleInputChange(e, 'password'),
                         type: "password",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -93,9 +170,7 @@ export default function LoginPage(props) {
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <div>
-                      <Button simple color="primary" size="lg">
-                        Sign In
-                      </Button>
+                      <Button simple color="primary" size="lg" onClick={handleOnSubmit}>Login</Button>
                     </div>
                     <div>
                       <Link

@@ -1,9 +1,16 @@
-import { container, title } from "styles/jss/nextjs-material-kit.js";
+import { container, containerFluid, title } from "styles/jss/nextjs-material-kit.js";
 
 import imagesStyle from "styles/jss/nextjs-material-kit/imagesStyles.js";
 
 const profilePageStyle = {
   container,
+  containerFluid: {
+    ...containerFluid,
+    width: "calc(100% - 30px)",
+    "& button": {
+      margin: "0px 0px 15px",
+    }
+  },
   profile: {
     textAlign: "center",
     "& img": {
@@ -78,6 +85,11 @@ const profilePageStyle = {
       borderLeftWidth: "5px",
     },
   },
+  headerWrapper: {
+    "& h1": {
+      color: "#FFF",
+    }
+  }
 };
 
 export default profilePageStyle;

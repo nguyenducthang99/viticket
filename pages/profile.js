@@ -17,7 +17,7 @@ import People from "@material-ui/icons/People";
 import Lock from "@material-ui/icons/Lock";
 import Check from "@material-ui/icons/Check";
 
-import { DropzoneArea } from 'material-ui-dropzone'
+import { DropzoneArea } from 'material-ui-dropzone';
 
 // core components
 import Header from "components/public/Header/Header.js";

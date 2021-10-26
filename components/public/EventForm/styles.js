@@ -13,6 +13,20 @@ const styles = {
             borderBottom: "3px solid #333",
         }
     },
+    disabled: {
+      "&:before": {
+        borderColor: "transparent !important",
+      },
+    },
+    underline: {
+      "&:hover:not($disabled):before,&:before": {
+        borderColor: "#D2D2D2 !important",
+        borderWidth: "1px !important",
+      },
+      "&:after": {
+        borderColor: primaryColor,
+      },
+    },
     eventDescription: {
         width: "100%",
     },

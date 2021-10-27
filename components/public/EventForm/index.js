@@ -23,6 +23,9 @@ import TableHead from '@mui/material/TableHead';
 import { TableFooter } from "@mui/material";
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 import { DropzoneArea } from 'material-ui-dropzone';
 
@@ -54,6 +57,30 @@ const mapStatusEvent = {
   2: "Cancel"
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
+
 const useStyles = makeStyles(styles);
 
 const EventForm = () => {
@@ -73,6 +100,10 @@ const EventForm = () => {
   }
 
   const handleOnSubmit = (e) => {
+    console.log(e);
+  };
+
+  const handleChangeCategry = (e) => {
     console.log(e);
   };
 
@@ -115,6 +146,30 @@ const EventForm = () => {
                 )}
               />
             </LocalizationProvider>
+          </div>
+          <div className={classes.selectContainer}>
+            <FormControl style={{ width: "100%" }} className={classes.eventDescription}>
+              <InputLabel id="event-category-label">Event category</InputLabel>
+              <Select
+                labelId="event-category-label"
+                id="event-category"
+                multiple
+                value={[]}
+                onChange={handleChangeCategry}
+                input={<OutlinedInput label="Category" />}
+                MenuProps={MenuProps}
+                className={classes.eventDescription}
+              >
+                {names.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
           <div>
             <CustomInput
@@ -233,15 +288,13 @@ const EventForm = () => {
                           Event status
                         </InputLabel>
                         <NativeSelect
-                          defaultValue={30}
                           inputProps={{
-                            name: 'age',
-                            id: 'uncontrolled-native',
+                            name: 'event-status',
+                            id: 'event-status',
                           }}
                         >
-                          <option value={10}>Ten</option>
-                          <option value={20}>Twenty</option>
-                          <option value={30}>Thirty</option>
+                          <option value={1}>Active</option>
+                          <option value={2}>Cancel</option>
                         </NativeSelect>
                       </FormControl>
                     </TableCell>

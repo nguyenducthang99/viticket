@@ -10,6 +10,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import Box from '@mui/material/Box';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -53,6 +54,10 @@ const EventForm = () => {
     const handleChangeFile = (files) => {
       console.log(files)
     };
+
+    const handleChangeDateSubevent = (newValue) => {
+      console.log(newValue);
+    }
 
     return (
         <div className={classes.container}>
@@ -135,11 +140,14 @@ const EventForm = () => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Dessert (100g serving)</TableCell>
-                      <TableCell align="right">Calories</TableCell>
-                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                      <TableCell>Sub Event Title</TableCell>
+                      <TableCell align="right">Sub Event Description</TableCell>
+                      <TableCell align="right">Date</TableCell>
+                      <TableCell align="right">Time start</TableCell>
+                      <TableCell align="right">Long</TableCell>
+                      <TableCell align="right">Place</TableCell>
+                      <TableCell align="right">Status</TableCell>
+                      <TableCell align="right">Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -148,13 +156,48 @@ const EventForm = () => {
                         key={row.name}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row">
-                          {row.name}
+                        <TableCell align="right">
+                          <CustomInput
+                            labelText="Sub-event name..."
+                            formControlProps={{
+                              fullWidth: true,
+                            }}
+                            inputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <Icon className={classes.icons}>architecture</Icon>
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            label="Sub-event description..."
+                            multiline
+                            variant="standard"
+                            className={classes.eventDescription}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DateTimePicker
+                              label="Date&Time picker"
+                              value={value}
+                              onChange={handleChangeDateSubevent}
+                              renderInput={(params) => <TextField {...params} />}
+                            />
+                          </LocalizationProvider>
+                        </TableCell>
                         <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="right">
+                          <Button justIcon round color="danger">
+                            <Icon className={classes.icons}>delete_forever</Icon>
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

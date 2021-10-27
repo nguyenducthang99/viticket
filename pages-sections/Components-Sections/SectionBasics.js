@@ -82,7 +82,7 @@ export default function SectionBasics() {
               <small>Pick your style</small>
             </h3>
           </div>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={8}>
               <Button color="primary">Default</Button>
               <Button color="primary" round>
@@ -104,7 +104,7 @@ export default function SectionBasics() {
               <small>Pick your size</small>
             </h3>
           </div>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={8}>
               <Button color="primary" size="sm">
                 Small
@@ -120,7 +120,7 @@ export default function SectionBasics() {
               <small>Pick your color</small>
             </h3>
           </div>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={8}>
               <Button>Default</Button>
               <Button color="primary">Primary</Button>

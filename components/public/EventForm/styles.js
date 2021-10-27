@@ -29,6 +29,23 @@ const styles = {
     },
     eventDescription: {
         width: "100%",
+        "& label": {
+          top: "-6px",
+        },
+        "& label + div ": {
+          marginTop: "10px",
+        }
+    },
+    selectContainer: {
+      "& ul": {
+        display: "flex",
+      },
+    },
+    verticalCenter: {
+      marginTop: "20px",
+    },
+    selectContainerForm: {
+      width: "100%",
     },
     dateRangePicker: {
         width: "100%",
@@ -45,11 +62,16 @@ const styles = {
             fontWeight: "400",
             fontSize: "14px",
             lineHeight: "1.42857",
-            top: "10px",
+            top: "13px",
             letterSpacing: "unset",
             "& + $underline": {
-            marginTop: "0px",
+              marginTop: "0px",
             },
+        },
+        "& label + div fieldset": {
+          border: "none",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.42)",
+          borderRadius: "0px",
         },
         "& input": {
             color: "#495057",

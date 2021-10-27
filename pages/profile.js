@@ -99,7 +99,7 @@ export default function ProfilePage(props) {
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div style={{ paddingBottom: "20px" }}>
           <div className={classes.container}>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem xs={12} sm={12} md={6}>
                 <div className={classes.profile}>
                   <div>
@@ -116,7 +116,7 @@ export default function ProfilePage(props) {
                 </div>
               </GridItem>
             </GridContainer>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem sm={12}>
                 <h3 style={{ textAlign: "center" }}>Updates Profile</h3>
               </GridItem>
@@ -183,7 +183,7 @@ export default function ProfilePage(props) {
       <div className={classNames(classes.main, classes.mainRaisedNext)}>
         <div style={{ paddingBottom: "20px" }}>
           <div className={classes.container}>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem sm={12}>
                 <h3 style={{ textAlign: "center" }}>Change Password</h3>
               </GridItem>
@@ -233,7 +233,7 @@ export default function ProfilePage(props) {
       <div className={classNames(classes.main, classes.mainRaisedNext)}>
         <div style={{ paddingBottom: "20px" }}>
           <div className={classes.container}>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem md={6}>
                 <h3 style={{ textAlign: "center" }}>Verify buyer information</h3>
                 <br />
@@ -283,7 +283,7 @@ export default function ProfilePage(props) {
       <div className={classNames(classes.main, classes.mainRaisedNext)}>
         <div style={{ paddingBottom: "20px" }}>
           <div className={classes.container}>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <h3 style={{ textAlign: "center" }}>Seller Zone</h3>
               <br />
               <GridItem md={12} style={{ textAlign: "center" }}>

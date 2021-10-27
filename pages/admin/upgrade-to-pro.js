@@ -87,7 +87,7 @@ function UpgradeToPro() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   return (
-    <GridContainer justify="center">
+    <GridContainer justifyContent="center">
       <GridItem xs={12} sm={12} md={8}>
         <Card>
           <CardHeader color="info">

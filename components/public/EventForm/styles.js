@@ -34,7 +34,29 @@ const styles = {
         },
         "& label + div ": {
           marginTop: "10px",
-        }
+        },
+        "& label.MuiInputLabel-outlined.MuiInputLabel-shrink": {
+          transform: "translate(0px , 0px ) scale(0.75) !important",
+        },
+    },
+    eventCategory: {
+      width: "100%",
+      "& label": {
+        top: "-10px",
+        left: "0px",
+        transform: "translate(0px, 20px) scale(1)",
+      },
+      "& label + div, & label + div>div:first-child, & label + div fieldset": {
+        border: "none",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.42)",
+        borderRadius: "0px",
+      },
+      "& label.MuiInputLabel-outlined.MuiInputLabel-shrink": {
+        transform: "translate(0px , 0px ) scale(0.75) !important",
+      },
+      "&:focus": {
+        outline: "none",
+      }
     },
     selectContainer: {
       "& ul": {
@@ -47,6 +69,15 @@ const styles = {
     selectContainerForm: {
       width: "100%",
     },
+    customTable: {
+      "& td": {
+        padding: "8px",
+      },
+      "& td button": {
+        margin: "0px 5px",
+        marginTop: "0px !important",
+      }
+    },
     dateRangePicker: {
         width: "100%",
         margin: "0 0 17px 0",
@@ -58,6 +89,7 @@ const styles = {
         },
         "& label": {
             ...defaultFont,
+            transform: "translate(0px, 20px) scale(1)",
             color: "#AAAAAA !important",
             fontWeight: "400",
             fontSize: "14px",
@@ -67,6 +99,9 @@ const styles = {
             "& + $underline": {
               marginTop: "0px",
             },
+        },
+        "& label.MuiInputLabel-outlined.MuiInputLabel-shrink": {
+          transform: "translate(0px , 0px ) scale(0.75) !important",
         },
         "& label + div fieldset": {
           border: "none",

@@ -251,7 +251,6 @@ footer ul li a:hover {
   border-radius: 8px 0 0 8px;
   text-align: center;
   top: 120px;
-  .badge-primary-background-color: #9c27b0;
 }
 
 .fixed-plugin .SocialMediaShareButton,
@@ -395,7 +394,6 @@ footer ul li a:hover {
 }
 
 .fixed-plugin .adjustments-line p {
-  float: left;
   display: inline-block;
   margin-bottom: 0;
   font-size: 1em;
@@ -546,4 +544,15 @@ footer ul li a:hover {
   z-index: 9999;
   position: absolute;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.MuiPaper-root ul[aria-labelledby="event-category-label"] {
+  display: flex;
+  flex-direction: column;
+}
+.MuiPaper-root ul[aria-labelledby="event-category-label"] li {
+  padding: 5px 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 }

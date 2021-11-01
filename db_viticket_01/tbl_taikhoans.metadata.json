@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"db_viticket_01.tbl_taikhoans"}],"uuid":"e68da22aacb9446ab1cd4f3da2df3679"}

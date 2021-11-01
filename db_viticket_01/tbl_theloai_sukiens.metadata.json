@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"db_viticket_01.tbl_theloai_sukiens"}],"uuid":"cbe4861dd0be45cfb131765e7bddbecc"}

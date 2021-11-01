@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"db_viticket_01.tbl_hinhthucthanhtoans"}],"uuid":"3a08f8c3c36540b6abd3e7364f595462"}

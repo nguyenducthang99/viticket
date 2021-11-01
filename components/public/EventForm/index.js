@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { format, set } from 'date-fns'
+import React, { useState, useEffect } from "react";
+import { format, set } from 'date-fns';
+import { useSelector } from 'react-redux';
+import axios from "axios";
+import Router from "next/router";
 
 import Icon from "@material-ui/core/Icon";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -37,43 +40,13 @@ import Button from "components/public/CustomButtons/Button.js";
 import GridContainer from "components/public/Grid/GridContainer.js";
 import CustomInput from "components/public/CustomInput/CustomInput.js";
 
+import { API_URL } from "constants/commons.js";
 import styles from './styles.js';
 import { toast } from 'react-toastify';
 
 const getWeeksAfter = (date, amount) => {
   return date ? addWeeks(date, amount) : undefined;
 }
-
-const rows = [
-  {
-    PK_iMaCTSuKien: 1,
-    FK_iMaSuKien: 1,
-    dNgayToChuc: new Date(),
-    sThongTinChiTiet: "Imagine Dragons: Mercury Tour",
-    sMoTa: `Age Limit: Everyone requires a ticket, regardless of age.
-    Doors Open: 6:00 PM.
-    Suite Rental Information: Click for Info
-    Event Info & Details on Colonial Life Arena Website
-    To allow for more Card Members to enjoy the show, American Express has set a two-order limit for this offer. This limit applies across all Cards associated with all of your American Express accounts. Prepaid Cards are not eligible.`,
-    iThoiLuong: 180,
-    sViTri: "Colonial Life Arena, Columbia, SC",
-    iTrangThai: 1,
-  },
-  {
-    PK_iMaCTSuKien: 2,
-    FK_iMaSuKien: 1,
-    dNgayToChuc: new Date(),
-    sThongTinChiTiet: "Imagine Dragons: Mercury Tour",
-    sMoTa: `Age Limit: Everyone requires a ticket, regardless of age.
-    Doors Open: 6:00 PM.
-    Suite Rental Information: Click for Info
-    Event Info & Details on Colonial Life Arena Website
-    To allow for more Card Members to enjoy the show, American Express has set a two-order limit for this offer. This limit applies across all Cards associated with all of your American Express accounts. Prepaid Cards are not eligible.`,
-    iThoiLuong: 180,
-    sViTri: "Colonial Life Arena, Columbia, SC",
-    iTrangThai: 1,
-  },
-];
 
 const mapStatusEvent = {
   1: "Active",
@@ -102,27 +75,25 @@ const style = {
   p: 4,
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 const useStyles = makeStyles(styles);
 
-const EventForm = () => {
+const EventForm = (props) => {
   const classes = useStyles();
-  const [value, setValue] = useState([null, null]);
   const [isOpenModal, setOpenModal] = useState(false);
-  const [listEventDetails, setListEventDetails] = useState(rows);
-  const initialState = {
+  const [listEventDetails, setListEventDetails] = useState([]);
+  const initialState = props?.event ? props?.event : {
+    PK_iMaSukien: 0,
+    sTenSukien: '',
+    sSlugSukien: '',
+    dThoigianBatdau: null,
+    dThoigianKetthuc: null,
+    sMota: '',
+    sDiadiem: '',
+    sLinkanh: '',
+    FK_iMaTrangthai: 1,
+    FK_iMaTaikhoan: null,
+  };
+  const initialDetailState = {
     PK_iMaCTSuKien: 0,
     FK_iMaSuKien: 1,
     dNgayToChuc: new Date(),
@@ -132,7 +103,33 @@ const EventForm = () => {
     sViTri: "",
     iTrangThai: 1,
   };
-  const [eventDetailEdit, setEventDetailEdit] = useState(initialState);
+  const [eventEdit, setEventEdit] = useState(initialState);
+  const [eventEditCategories, setEventEditCategories] = useState([]);
+  const [eventDetailEdit, setEventDetailEdit] = useState(initialDetailState);
+  const [categories, setCategories] = useState([]);
+
+  const userInfo = useSelector((state) => state.user.userInfo);
+
+  useEffect(() => {
+    if (userInfo) {
+      getCategories();
+    } else {
+      Router.push('/');
+    }
+  }, [userInfo]);
+
+  const getCategories = () => {
+    axios
+      .get(`${API_URL}/account/the-loai`)
+      .then((res) => {
+        if (res.status === 200 && res.data) {
+          setCategories(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleChangeFile = (files) => {
     console.log(files)
@@ -147,11 +144,53 @@ const EventForm = () => {
   }
 
   const handleOnSubmit = (e) => {
-    console.log(e);
+    const validate = validateEvent();
+    if (validate) {
+      const newEvent = {...eventEdit}
+      newEvent.PK_iMaSukien = new Date().getTime();
+      newEvent.FK_iMaTaikhoan = userInfo._id;
+      let ID = new Date().getTime();
+
+      const newEventDetail = listEventDetails.map((detail) => {
+        return {
+          ...detail,
+          PK_iMaCTSuKien: ID++,
+          FK_iMaSuKien: newEvent.PK_iMaSukien
+        }
+      });
+
+      const newEventCategories = eventEditCategories.map((cat) => {
+        return {
+          PK_iMaTheloai: cat,
+          PK_iMaSukien: newEvent.PK_iMaSukien
+        }
+      })
+
+      saveEvent(newEvent, newEventDetail, newEventCategories);
+    }
   };
 
+  const saveEvent = (event, details, categories) => {
+    axios.post(`${API_URL}/event/tao-su-kien`, {
+      event, details, categories
+    })
+      .then(res => {
+        if (res.status === 200 && res.data) {
+          setEventEdit(initialState);
+          setEventDetailEdit(initialDetailState);
+          setEventEditCategories([]);
+          setListEventDetails([]);
+          toast.success(`Create event successfully!`)
+        };
+      })
+      .catch(err => {
+        toast.error(`Somethings wrong when create event, please try again!`);
+        console.error(err);
+      })
+  }
+
   const handleChangeCategry = (e) => {
-    console.log(e);
+    setEventEditCategories(e.target.value);
   };
 
   const handleCloseModal = () => {
@@ -166,7 +205,14 @@ const EventForm = () => {
 
   const handleClickAddDetail = () => {
     setOpenModal(true);
-    setEventDetailEdit(initialState);
+    setEventDetailEdit(initialDetailState);
+  }
+
+  const handleChangeTimeEvent = (time) => {
+    const newEventEdit = { ...eventEdit };
+    newEventEdit.dThoigianBatdau = time[0];
+    newEventEdit.dThoigianKetthuc = time[1];
+    setEventEdit(newEventEdit);
   }
 
   const handleOnSubmitDetail = () => {
@@ -188,6 +234,25 @@ const EventForm = () => {
   const handleOnCloseDetail = () => {
     setOpenModal(false);
   }
+  const validateEvent = () => {
+    for (const [key, value] of Object.entries(eventEdit)) {
+      if ([
+        'PK_iMaSukien', 
+        'FK_iMaTrangthai', 
+        'FK_iMaTaikhoan',
+        'sLinkanh',
+      ].includes(key)) continue;
+      if (!value) {
+        toast.error(`${key} can't be empty!`);
+        return false;
+      };
+    };
+    if (!eventEditCategories.length) {
+      toast.error(`Category of event can't be empty!`);
+      return false;
+    }
+    return true;
+  }
 
   const validateEventDetail = () => {
     for (const [key, value] of Object.entries(eventDetailEdit)) {
@@ -203,6 +268,35 @@ const EventForm = () => {
     };
     return true;
   }
+  const handleInputEventChange = (e, key) => {
+    const newEventEdit = { ...eventEdit };
+    newEventEdit[`${key}`] = e.target.value;
+    if (key === 'sTenSukien') {
+      newEventEdit.sSlugSukien = slugify(e.target.value);
+    }
+    setEventEdit(newEventEdit);
+  };
+  
+  const slugify = (string) => {
+    const a = 'àáäâãåăæąçćčđďèéěėëêęğǵḧìíïîįłḿǹńňñòóöôœøṕŕřßşśšșťțùúüûǘůűūųẃẍÿýźžż·/_,:;'
+    const b = 'aaaaaaaaacccddeeeeeeegghiiiiilmnnnnooooooprrsssssttuuuuuuuuuwxyyzzz------'
+    const p = new RegExp(a.split('').join('|'), 'g')
+    return string.toString().toLowerCase()
+      .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
+      .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
+      .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
+      .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+      .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+      .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+      .replace(/đ/gi, 'd')
+      .replace(/\s+/g, '-')
+      .replace(p, c => b.charAt(a.indexOf(c)))
+      .replace(/&/g, '-and-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '')
+  }
 
   return (
     <div className={classes.container}>
@@ -216,6 +310,8 @@ const EventForm = () => {
               fullWidth: true,
             }}
             inputProps={{
+              onChange: (e) => handleInputEventChange(e, 'sTenSukien'),
+              defaultValue: eventEdit?.sTenSukien,
               endAdornment: (
                 <InputAdornment position="end">
                   <Icon className={classes.icons}>architecture</Icon>
@@ -229,11 +325,8 @@ const EventForm = () => {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateRangePicker
                 disablePast
-                value={value}
-                maxDate={getWeeksAfter(value[0], 4)}
-                onChange={(newValue) => {
-                  setValue(newValue);
-                }}
+                value={[eventEdit.dThoigianBatdau, eventEdit.dThoigianKetthuc]}
+                onChange={handleChangeTimeEvent}
                 renderInput={(startProps, endProps) => (
                   <React.Fragment>
                     <TextField label="Date start" className={classes.dateRangePicker} {...startProps} />
@@ -251,17 +344,17 @@ const EventForm = () => {
                 labelId="event-category-label"
                 id="event-category"
                 multiple
-                value={[]}
+                value={eventEditCategories}
                 onChange={handleChangeCategry}
                 input={<OutlinedInput label="Category" />}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                {categories.map((option) => (
                   <MenuItem
-                    key={name}
-                    value={name}
+                    key={option.PK_iMaTheloai}
+                    value={option.PK_iMaTheloai}
                   >
-                    {name}
+                    {option.sTenTheloai}
                   </MenuItem>
                 ))}
               </Select>
@@ -275,6 +368,8 @@ const EventForm = () => {
                 fullWidth: true,
               }}
               inputProps={{
+                onChange: (e) => handleInputEventChange(e, 'sDiadiem'),
+                value: eventEdit?.sDiadiem || '',
                 endAdornment: (
                   <InputAdornment position="end">
                     <Icon className={classes.icons}>map</Icon>
@@ -290,6 +385,8 @@ const EventForm = () => {
               multiline
               variant="standard"
               className={classes.eventDescription}
+              onChange={(e) => handleInputEventChange(e, 'sMota')}
+              value={eventEdit?.sMota || ''}
             />
           </div>
         </GridItem>
@@ -323,7 +420,7 @@ const EventForm = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell>{row.sThongTinChiTiet}</TableCell>
-                    <TableCell align="right">{format(row.dNgayToChuc, 'HH:mm MM/dd/yyyy')}</TableCell>
+                    <TableCell align="right">{format(row.dNgayToChuc, 'HH:mm dd/MM/yyyy')}</TableCell>
                     <TableCell align="right">{row.iThoiLuong}</TableCell>
                     <TableCell align="right">{row.sViTri}</TableCell>
                     <TableCell align="right">{mapStatusEvent[row.iTrangThai]}</TableCell>
@@ -382,10 +479,10 @@ const EventForm = () => {
                     fullWidth: true,
                   }}
                   inputProps={{
-                    defaultValue: eventDetailEdit?.sThongTinChiTiet,
+                    value: eventDetailEdit?.sThongTinChiTiet || '',
                     onChange: (e) => setEventDetailEdit({
                       ...eventDetailEdit,
-                      sThongTinChiTiet: e.target.value.trim(),
+                      sThongTinChiTiet: e.target.value,
                     }),
                     endAdornment: (
                       <InputAdornment position="end">
@@ -397,14 +494,14 @@ const EventForm = () => {
               </GridItem>
               <GridItem md={12}>
                 <TextField
-                  defaultValue={eventDetailEdit?.sMoTa}
+                  value={eventDetailEdit?.sMoTa || ''}
                   label="Event detail description..."
                   multiline
                   variant="standard"
                   className={classes.eventDescription}
                   onChange={(e) => setEventDetailEdit({
                     ...eventDetailEdit,
-                    sMoTa: e.target.value.trim(),
+                    sMoTa: e.target.value,
                   })}
                 />
               </GridItem>
@@ -428,7 +525,7 @@ const EventForm = () => {
                     fullWidth: true,
                   }}
                   inputProps={{
-                    defaultValue: eventDetailEdit?.iThoiLuong,
+                    value: eventDetailEdit?.iThoiLuong || '',
                     onChange: (e) => setEventDetailEdit({
                       ...eventDetailEdit,
                       iThoiLuong: e.target.value,
@@ -445,14 +542,14 @@ const EventForm = () => {
               </GridItem>
               <GridItem md={6}>
                 <TextField
-                  defaultValue={eventDetailEdit?.sViTri}
+                  value={eventDetailEdit?.sViTri || ''}
                   label="Place..."
                   multiline
                   variant="standard"
                   className={classes.eventDescription}
                   onChange={(e) => setEventDetailEdit({
                     ...eventDetailEdit,
-                    sViTri: e.target.value.trim(),
+                    sViTri: e.target.value,
                   })}
                 />
               </GridItem>
@@ -463,7 +560,7 @@ const EventForm = () => {
                   </InputLabel>
                   <NativeSelect
                     inputProps={{
-                      defaultValue: eventDetailEdit?.iTrangThai,
+                      value: eventDetailEdit?.iTrangThai || '',
                       onChange: (e) => setEventDetailEdit({
                         ...eventDetailEdit,
                         iTrangThai: e.target.value,

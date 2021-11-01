@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import axios from "axios";
 
 import { useSelector } from 'react-redux';
@@ -31,6 +31,7 @@ import Parallax from "components/public/Parallax/Parallax.js";
 import NavPills from "components/public/NavPills/NavPills.js";
 import CustomInput from "components/public/CustomInput/CustomInput.js";
 import EventForm from "components/public/EventForm";
+import EventList from "components/public/EventList";
 
 import { API_URL } from "constants/commons.js";
 import styles from "styles/jss/nextjs-material-kit/pages/profilePage.js";
@@ -45,45 +46,43 @@ export default function ProfilePage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
   );
+  const [tabIndex, setTabIndex] = useState(0);
+  const [eventEdit, setEventEdit] = useState(null);
 
   const userInfo = useSelector((state) => state.user.userInfo);
-
-  const [userBasicInfo, setUserBasicInfo] = useState({
-    fullName: userInfo?.sTenNguoidung,
-    email: userInfo?.sEmail,
-    phone: userInfo?.sSodienthoai,
-  });
-  const [userPassword, setUserPassword] = useState({
-    password: '',
-    confirmPassword: '',
-  });
-  const [accountRule, setAccountRule] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // userInfo ? getAccountRules() : Router.push('/');
+    if (!userInfo) Router.push('/');
   }, [userInfo]);
 
-  const getAccountRules = () => {
+  useEffect(() => {
+    if (!!Router?.asPath && Router.asPath.includes('?event-id')) {
+      setTabIndex(0);
+      const eventId = getEventParam();
+      handleChangeEventEdit(eventId);
+    }
+  }, [Router?.asPath]);
+
+  const getEventParam = () => {
+    const url = new URL(window.location.href);
+    return url.searchParams.get("event-id");
+  }
+
+  const handleChangeEventEdit = (eventId) => {
     axios
-      .get(`${API_URL}/account/quyen/${userInfo.FK_iMaQuyen}`)
+      .get(`${API_URL}/event/edit-events/${eventId}`)
       .then((res) => {
         if (res.status === 200 && res.data) {
-          setAccountRule(res.data);
+          setEventEdit(res.data)
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  };
-
-  const handleChangeFileBefore = (files) => {
-    console.log(files)
-  };
-  const handleChangeFileAfter = (files) => {
-    console.log(files)
-  };
-
-  // if (!userInfo) return null;
+  }
+  
+  if (!userInfo) return null;
 
   return (
     <div>
@@ -113,6 +112,7 @@ export default function ProfilePage(props) {
             <GridContainer>
               <GridItem md={12}>
                 <NavPills
+                  active={tabIndex}
                   color="info"
                   horizontal={{
                     tabsGrid: { xs: 12, sm: 2, md: 2 },
@@ -122,29 +122,12 @@ export default function ProfilePage(props) {
                     {
                       tabButton: "Event",
                       tabIcon: Event,
-                      tabContent: (<EventForm />),
+                      tabContent: (<EventForm event={eventEdit} />),
                     },
                     {
                       tabButton: "List Events",
                       tabIcon: List,
-                      tabContent: (
-                        <span>
-                          <p>
-                            Efficiently unleash cross-media information without
-                            cross-media value. Quickly maximize timely
-                            deliverables for real-time schemas.
-                          </p>
-                          <br />
-                          <p>
-                            Dramatically maintain clicks-and-mortar solutions
-                            without functional solutions. Dramatically visualize
-                            customer directed convergence without revolutionary
-                            ROI. Collaboratively administrate empowered markets
-                            via plug-and-play networks. Dynamically procrastinate
-                            B2C users after installed base benefits.
-                          </p>
-                        </span>
-                      ),
+                      tabContent: (<EventList />),
                     },
                   ]}
                 />

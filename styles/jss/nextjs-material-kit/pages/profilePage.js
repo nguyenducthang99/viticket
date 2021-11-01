@@ -73,6 +73,7 @@ const profilePageStyle = {
   verifiedItem: {
     cursor: "pointer",
     padding: "8px 12px",
+    margin: "5px 0px",
     "&:hover": {
       background: "#EEE",
     },

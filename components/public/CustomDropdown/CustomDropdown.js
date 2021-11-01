@@ -138,7 +138,7 @@ export default function CustomDropdown(props) {
                     </MenuItem>
                   ) : null}
                   {dropdownList.map((prop, key) => {
-                    if (prop.divider) {
+                    if (prop?.divider) {
                       return (
                         <Divider
                           key={key}

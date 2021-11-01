@@ -32,6 +32,12 @@ export default function HeaderLinks(props) {
     dispatch(setUserInfo(null));
   };
 
+  const mySelling = userInfo?.FK_iMaQuyen === 2 && userInfo?.FK_iMaTrangthai === 1 ? (
+    <Link href="/sell">
+      <a className={classes.navLink}><Icon className={classes.icons}>money</Icon>&nbsp; My Selling</a>
+    </Link>
+  ) : null;
+
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
@@ -102,6 +108,7 @@ export default function HeaderLinks(props) {
               <Link href="/orders">
                 <a className={classes.navLink}><Icon className={classes.icons}>event</Icon>&nbsp; My Tickets</a>
               </Link>,
+              mySelling,
               <Button
                 color="transparent"
                 className={classes.navLink}

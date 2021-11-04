@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/viticket-backend/node_modules
 
 # testing
 /coverage

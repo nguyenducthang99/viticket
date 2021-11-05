@@ -490,7 +490,7 @@ export default function ProfilePage(props) {
                 <div>
                   {verifyHistory.map((hs) => (
                     <div className={classes.verifiedItem} key={hs.PK_iMaHoso}>
-                      <p>Gửi lúc: {format(new Date(hs.createdAt), 'HH:ii dd/MM/yyyy')}</p>
+                      <p>Gửi lúc: {format(new Date(hs.createdAt), 'dd/MM/yyyy HH:ii')}</p>
                       <p>Trạng thái: {mapTrangThaiHoSo[hs.FK_iMaTrangthaiHoso]}</p>
                     </div>
                   ))}

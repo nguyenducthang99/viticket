@@ -6,9 +6,6 @@ import {
   } from "styles/jss/nextjs-material-kit.js";
 
 const styles = {
-    eventDetailDate: {
-      marginTop: "30px",
-    },
     container: {
         "& h2 span": {
             fontWeight: "700",
@@ -57,15 +54,11 @@ const styles = {
       "& label.MuiInputLabel-outlined.MuiInputLabel-shrink": {
         transform: "translate(0px , 0px ) scale(0.75) !important",
       },
-      "& .MuiSelect-outlined.MuiOutlinedInput-input.MuiInputBase-input": {
-        padding: "5px 0px"
-      },
       "&:focus": {
         outline: "none",
       }
     },
     selectContainer: {
-      marginTop: "20px",
       "& ul": {
         display: "flex",
       },
@@ -101,7 +94,7 @@ const styles = {
             fontWeight: "400",
             fontSize: "14px",
             lineHeight: "1.42857",
-            top: "-15px",
+            top: "13px",
             letterSpacing: "unset",
             "& + $underline": {
               marginTop: "0px",
@@ -119,7 +112,6 @@ const styles = {
             color: "#495057",
             height: "unset",
             width: "100%",
-            padding: "5px 0px",
             "&,&::placeholder": {
                 fontSize: "14px",
                 fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',

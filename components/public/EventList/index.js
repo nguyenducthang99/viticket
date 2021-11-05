@@ -118,7 +118,6 @@ const EventForm = () => {
     return compareAsc(dateCompare, today);
   }
 
-
   const handleClickEdit = (event) => {
     Router.push(`/sell?event-id=${event.PK_iMaSukien}`)
   }

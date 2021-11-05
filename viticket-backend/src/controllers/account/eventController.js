@@ -102,6 +102,13 @@ const  event = {
             response.json(doc)
         })
     },
+    getListEventsIds: (request, response) => {
+        const query = tbl_sukien.find({}).select('PK_iMaSukien');
+        query.exec(function (err, someValue) {
+            if (err) response.send(err)
+            response.json(someValue);
+        });
+    },
 }
 
 export default event

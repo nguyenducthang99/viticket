@@ -53,16 +53,16 @@ export default function ProfilePage(props) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!userInfo) Router.push('/');
+    if (!userInfo) router.push('/');
   }, [userInfo]);
 
   useEffect(() => {
-    if (!!Router?.asPath && Router.asPath.includes('?event-id')) {
+    if (!!router?.asPath && router.asPath.includes('?event-id')) {
       setTabIndex(0);
       const eventId = getEventParam();
       handleChangeEventEdit(eventId);
     }
-  }, [Router?.asPath]);
+  }, [router?.asPath]);
 
   const getEventParam = () => {
     const url = new URL(window.location.href);

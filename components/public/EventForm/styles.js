@@ -42,7 +42,7 @@ const styles = {
     eventCategory: {
       width: "100%",
       "& label": {
-        top: "-10px",
+        top: "0px",
         left: "0px",
         transform: "translate(0px, 20px) scale(1)",
       },

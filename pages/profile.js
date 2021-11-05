@@ -231,6 +231,7 @@ export default function ProfilePage(props) {
         .then(res => {
           if (res.status === 200 && res.data) {
             toast.success(`Submit profile successfully!`)
+            getVerifyHistory();
           };
         })
         .catch(err => {

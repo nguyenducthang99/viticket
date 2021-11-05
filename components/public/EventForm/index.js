@@ -78,10 +78,22 @@ const style = {
 const useStyles = makeStyles(styles);
 
 const EventForm = (props) => {
+  const { event } = props;
   const classes = useStyles();
   const [isOpenModal, setOpenModal] = useState(false);
   const [listEventDetails, setListEventDetails] = useState([]);
-  const initialState = props?.event ? props?.event : {
+  const initialState = event ? {
+    PK_iMaSukien: event.PK_iMaSukien,
+    sTenSukien: event.sTenSukien,
+    sSlugSukien: event.sSlugSukien,
+    dThoigianBatdau: event.dThoigianBatdau,
+    dThoigianKetthuc: event.dThoigianKetthuc,
+    sMota: event.sMota,
+    sDiadiem: event.sDiadiem,
+    sLinkanh: event.sLinkanh,
+    FK_iMaTrangthai: event.FK_iMaTrangthai,
+    FK_iMaTaikhoan: event.FK_iMaTaikhoan,
+  } : {
     PK_iMaSukien: 0,
     sTenSukien: '',
     sSlugSukien: '',
@@ -117,6 +129,25 @@ const EventForm = (props) => {
       Router.push('/');
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    if (event) {
+      const listDetail = event.eventDetails.map((detail) => {
+        return {
+          PK_iMaCTSuKien: detail.PK_iMaCTSuKien,
+          FK_iMaSuKien: detail.FK_iMaSuKien,
+          dNgayToChuc: new Date(detail.dNgayToChuc),
+          sThongTinChiTiet: detail.sThongTinChiTiet,
+          sMoTa: detail.sMoTa,
+          iThoiLuong: detail.iThoiLuong,
+          sViTri: detail.sViTri,
+          iTrangThai: detail.iTrangThai,
+        }
+      })
+      setListEventDetails(listDetail);
+    }
+  }, event) 
+
 
   const getCategories = () => {
     axios
@@ -311,7 +342,7 @@ const EventForm = (props) => {
             }}
             inputProps={{
               onChange: (e) => handleInputEventChange(e, 'sTenSukien'),
-              defaultValue: eventEdit?.sTenSukien,
+              value: eventEdit?.sTenSukien || '',
               endAdornment: (
                 <InputAdornment position="end">
                   <Icon className={classes.icons}>architecture</Icon>
@@ -393,7 +424,7 @@ const EventForm = (props) => {
         <GridItem md={6}>
           <DropzoneArea
             acceptedFiles={['image/*']}
-            dropzoneText={"Ảnh sự kiện"}
+            dropzoneText={"Event thumbnails"}
             onChange={(files) => handleChangeFile(files)}
             dropzoneClass={classes.fileWrapper}
             filesLimit={1}
@@ -506,17 +537,19 @@ const EventForm = (props) => {
                 />
               </GridItem>
               <GridItem md={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DateTimePicker
-                    label="Event detail date"
-                    onChange={(date) => setEventDetailEdit({
-                      ...eventDetailEdit,
-                      dNgayToChuc: date,
-                    })}
-                    value={eventDetailEdit?.dNgayToChuc}
-                    renderInput={(params) => <TextField className={classes.dateRangePicker} {...params} />}
-                  />
-                </LocalizationProvider>
+                <div className={classes.eventDetailDate}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateTimePicker
+                      label="Event detail date"
+                      onChange={(date) => setEventDetailEdit({
+                        ...eventDetailEdit,
+                        dNgayToChuc: date,
+                      })}
+                      value={eventDetailEdit?.dNgayToChuc}
+                      renderInput={(params) => <TextField className={classes.dateRangePicker} {...params} />}
+                    />
+                  </LocalizationProvider>
+                </div>
               </GridItem>
               <GridItem md={6}>
                 <CustomInput

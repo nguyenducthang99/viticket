@@ -3,6 +3,7 @@ import { format, set, compareAsc } from 'date-fns';
 import { useSelector } from 'react-redux';
 import axios from "axios";
 import Router from "next/router";
+import Link from "next/link";
 
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
@@ -107,7 +108,7 @@ const EventForm = () => {
     const compareStart = compareAsc(new Date(event.dThoigianBatdau).setHours(0, 0, 0, 0), today);
     const compareEnd = compareAsc(today, new Date(event.dThoigianKetthuc).setHours(0, 0, 0, 0));
     if (compareStart === 1) return 'Pendding';
-    if (compareEnd === 1) return 'Ending';
+    if (compareEnd === 1) return 'Finished';
     return 'Active now';
   }
 
@@ -122,9 +123,14 @@ const EventForm = () => {
     Router.push(`/sell?event-id=${event.PK_iMaSukien}`)
   }
 
-  const editAvailable = (event) => {
+  const editable = (event) => {
     const isEnd = compareToday(event.dThoigianKetthuc);
     return isEnd !== -1 && event.FK_iMaTrangthai === 1;
+  }
+
+  const cancelable = (event) => {
+    const isStart = compareToday(event.dThoigianBatdau);
+    return editable(event) && isStart === 1;
   }
 
   return (
@@ -159,10 +165,23 @@ const EventForm = () => {
                   <TableCell align="right">
                     {row.FK_iMaTrangthai === 1 ? getTrangThaiSuKien(row) : mapTrangThaiSuKien[row.FK_iMaTrangthai]}
                   </TableCell>
-                  <TableCell align="right">
-                    {editAvailable(row) ? (
+                  <TableCell>
+                    <Link href={`/add-tickets/${row.PK_iMaSukien}`}>
+                      <a href={`/add-tickets/${row.PK_iMaSukien}`} >
+                        <Button
+                          style={{ margin: "2px" }}
+                          size="sm"
+                          justIcon
+                          round
+                          color="info"
+                        >
+                          <Icon className={classes.icons}>info</Icon>
+                        </Button>
+                      </a>
+                    </Link>
+                    {editable(row) ? (
                       <Button
-                        style={{ margin: "0px 0px 0px" }}
+                        style={{ margin: "2px" }}
                         size="sm"
                         justIcon
                         round
@@ -170,6 +189,18 @@ const EventForm = () => {
                         onClick={() => handleClickEdit(row)}
                       >
                         <Icon className={classes.icons}>edit</Icon>
+                      </Button>
+                    ) : null}
+                    {cancelable(row) ? (
+                      <Button
+                        style={{ margin: "2px" }}
+                        size="sm"
+                        justIcon
+                        round
+                        color="danger"
+                        onClick={() => handleClickEdit(row)}
+                      >
+                        <Icon className={classes.icons}>remove</Icon>
                       </Button>
                     ) : null}
                   </TableCell>

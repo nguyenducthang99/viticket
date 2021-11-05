@@ -38,48 +38,21 @@ import styles from "styles/jss/nextjs-material-kit/pages/profilePage.js";
 
 const useStyles = makeStyles(styles);
 
-export default function ProfilePage(props) {
+const getEventIds = async () => {
+  return await axios.get(`${API_URL}/event/ids`);
+}
+
+export default function AddTicketsPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
-  const imageClasses = classNames(
-    classes.imgRaised,
-    classes.imgRoundedCircle,
-    classes.imgFluid
-  );
-  const [tabIndex, setTabIndex] = useState(0);
-  const [eventEdit, setEventEdit] = useState(null);
+  const { id } = props;
+  const [eventInfo, setEventInfo] = useState(null);
 
   const userInfo = useSelector((state) => state.user.userInfo);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!userInfo) Router.push('/');
-  }, [userInfo]);
-
-  useEffect(() => {
-    if (!!router?.asPath && router.asPath.includes('?event-id')) {
-      setTabIndex(0);
-      const eventId = getEventParam();
-      handleChangeEventEdit(eventId);
-    }
-  }, [router?.asPath]);
-
-  const getEventParam = () => {
-    const url = new URL(window.location.href);
-    return url.searchParams.get("event-id");
-  }
-
-  const handleChangeEventEdit = (eventId) => {
-    axios
-      .get(`${API_URL}/event/edit-events/${eventId}`)
-      .then((res) => {
-        if (res.status === 200 && res.data) {
-          setEventEdit(res.data)
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const getEventInfo = () => {
+    
   }
   
   if (!userInfo) return null;
@@ -111,26 +84,6 @@ export default function ProfilePage(props) {
           <div className={classes.containerFluid}>
             <GridContainer>
               <GridItem md={12}>
-                <NavPills
-                  active={tabIndex}
-                  color="info"
-                  horizontal={{
-                    tabsGrid: { xs: 12, sm: 2, md: 2 },
-                    contentGrid: { xs: 12, sm: 10, md: 10 },
-                  }}
-                  tabs={[
-                    {
-                      tabButton: "Event",
-                      tabIcon: Event,
-                      tabContent: (<EventForm event={eventEdit} />),
-                    },
-                    {
-                      tabButton: "List Events",
-                      tabIcon: List,
-                      tabContent: (<EventList />),
-                    },
-                  ]}
-                />
               </GridItem>
             </GridContainer>
           </div>
@@ -139,4 +92,23 @@ export default function ProfilePage(props) {
       <Footer />
     </div>
   );
+}
+
+export async function getStaticPaths() {
+  const res = await getEventIds();
+  const items = res?.data || [];
+  const paths = items.map((item) => ({
+      params: { id: item.PK_iMaSukien.toString() },
+  }));
+  return { paths, fallback: 'blocking' };
+}
+
+export async function getStaticProps(props) {
+  const { id } = props.params;
+
+  return {
+    props: {
+      id,
+    },
+  }
 }

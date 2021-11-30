@@ -66,8 +66,8 @@ export default function LandingPage(props) {
 
 export async function getServerSideProps() {
   // Fetch data from external API
-  // const res = await getCategories();
-  const categories = [];
+  const res = await getCategories();
+  const categories = res.data?.categories || [];
 
   // Pass data to the page via props
   return { props: { categories } }

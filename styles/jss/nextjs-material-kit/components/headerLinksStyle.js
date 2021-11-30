@@ -48,6 +48,7 @@ const headerLinksStyle = (theme) => ({
     textDecoration: "none",
     margin: "0px",
     display: "inline-flex",
+    alignItems: "center",
     "&:hover,&:focus": {
       color: "inherit",
       background: "rgba(200, 200, 200, 0.2)",
@@ -99,9 +100,10 @@ const headerLinksStyle = (theme) => ({
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   icons: {
-    width: "20px",
-    height: "20px",
+    width: "28px",
+    height: "22px",
     marginRight: "3px",
+    marginBottom: "1px",
   },
   socialIcons: {
     position: "relative",

@@ -108,6 +108,7 @@ const profilePageStyle = {
   eventInfoWapper: {
     "& p": {
       margin: "3px 0px",
+      whiteSpace: "pre-line",
     }
   },
   eventTitle: {
@@ -117,6 +118,10 @@ const profilePageStyle = {
   },
   subEventStatus: {
     textAlign: "right",
+    fontWeight: "600"
+  },
+  ticketType: {
+    marginTop: "10px !important",
   }
 };
 

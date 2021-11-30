@@ -553,7 +553,7 @@ const EventForm = (props) => {
               </GridItem>
               <GridItem md={6}>
                 <CustomInput
-                  labelText="Time long (hours)"
+                  labelText="Time long (minutes)"
                   formControlProps={{
                     fullWidth: true,
                   }}

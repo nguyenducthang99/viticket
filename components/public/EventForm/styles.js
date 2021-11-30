@@ -1,7 +1,5 @@
 import {
     primaryColor,
-    dangerColor,
-    successColor,
     defaultFont,
   } from "styles/jss/nextjs-material-kit.js";
 
@@ -40,6 +38,7 @@ const styles = {
         },
     },
     eventCategory: {
+      marginTop: "20px !important",
       width: "100%",
       "& label": {
         top: "0px",
@@ -56,6 +55,9 @@ const styles = {
       },
       "&:focus": {
         outline: "none",
+      },
+      "& .MuiSelect-select.MuiSelect-outlined": {
+        padding: "16px 32px 4px 0px !important",
       }
     },
     selectContainer: {
@@ -94,14 +96,14 @@ const styles = {
             fontWeight: "400",
             fontSize: "14px",
             lineHeight: "1.42857",
-            top: "13px",
+            top: "0px",
             letterSpacing: "unset",
             "& + $underline": {
               marginTop: "0px",
             },
         },
         "& label.MuiInputLabel-outlined.MuiInputLabel-shrink": {
-          transform: "translate(0px , 0px ) scale(0.75) !important",
+          transform: "translate(0px , 0px) scale(0.75) !important",
         },
         "& label + div fieldset": {
           border: "none",
@@ -112,17 +114,25 @@ const styles = {
             color: "#495057",
             height: "unset",
             width: "100%",
+            padding: "16px 32px 4px 0px !important",
             "&,&::placeholder": {
                 fontSize: "14px",
                 fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
                 fontWeight: "400",
                 lineHeight: "1.42857",
                 opacity: "1",
+
             },
             "&::placeholder": {
                 color: "#AAAAAA",
             },
+            "&.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
+              padding: "17px 14px 5px 0px",
+            },
         }
+    },
+    eventDetailDate: {
+      marginTop: "20px",
     },
 };
 

@@ -2,6 +2,8 @@ import {tbl_theloai} from '../../database/models/tbl_theloai.js'
 import {tbl_sukien} from '../../database/models/tbl_sukien.js'
 import {tbl_theloai_sukien} from '../../database/models/tbl_theloai_sukien.js'
 import {tbl_chitiet_sukien} from '../../database/models/tbl_chitiet_sukien.js'
+import {tbl_loaive_sukien} from '../../database/models/tbl_loaive_sukien.js'
+import {tbl_ve_sukien} from '../../database/models/tbl_ve_sukien.js'
 
 const  event = {
     taoTheloai: (request, response) => {
@@ -108,6 +110,21 @@ const  event = {
             if (err) response.send(err)
             response.json(someValue);
         });
+    },
+    taoLoaiVeEvent: (request, response) => {
+        const { loaiVe, listVe } = request.body;
+        const newLoaiVe = new tbl_loaive_sukien(loaiVe);
+        newLoaiVe.save((err, doc) => {
+            if (err)
+                response.send(err)
+            else {
+                listVe.forEach((ve) => {
+                    const newVe = new tbl_ve_sukien(ve);
+                    newVe.save();
+                })
+                response.json(doc);
+            }
+        })
     },
 }
 

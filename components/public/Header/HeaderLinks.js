@@ -34,61 +34,66 @@ export default function HeaderLinks(props) {
 
   const mySelling = userInfo?.FK_iMaQuyen === 2 && userInfo?.FK_iMaTrangthai === 1 ? (
     <Link href="/sell">
-      <a className={classes.navLink}><Icon className={classes.icons}>money</Icon>&nbsp; My Selling</a>
+      <a  href="/sell" className={classes.navLink}><Icon className={classes.icons}>money</Icon>&nbsp; My Selling</a>
     </Link>
   ) : null;
 
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/nextjs-material-kit-pro?ref=njsmk-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <Icon className={classes.icons}>auto_awesome</Icon> Concerts
-        </Button>
+        <Link href="/category/concerts-1">
+          <a
+            href="/category/concerts-1"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Icon className={classes.icons}>auto_awesome</Icon> Concerts
+          </a>
+        </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/nextjs-material-kit-pro?ref=njsmk-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <Icon className={classes.icons}>sports_soccer</Icon> Sports
-        </Button>
+        <Link href="/category/sports-2">
+          <a
+            href="/category/sports-2"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Icon className={classes.icons}>sports_soccer</Icon> Sports
+          </a>
+        </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/nextjs-material-kit-pro?ref=njsmk-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <Icon className={classes.icons}>sports_martial_arts</Icon> Art & Theater
-        </Button>
+        <Link href="/category/art-theater-3">
+          <a
+            href="/category/art-theater-3"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Icon className={classes.icons}>sports_martial_arts</Icon> Art & Theater
+          </a>
+        </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/nextjs-material-kit-pro?ref=njsmk-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <Icon className={classes.icons}>family_restroom</Icon> Family
-        </Button>
+        <Link href="/category/family-4">
+          <a
+            href="/category/family-4"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Icon className={classes.icons}>family_restroom</Icon> Family
+          </a>
+        </Link>
       </ListItem>
       <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/nextjs-material-kit-pro?ref=njsmk-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <Icon className={classes.icons}>more</Icon> More
-        </Button>
+        <Link href="/categorys">
+          <a
+            href="/categorys"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Icon className={classes.icons}>more</Icon> More
+          </a>
+        </Link>
       </ListItem>
       {userInfo ? (
         <ListItem className={classes.listItem}>
@@ -103,10 +108,10 @@ export default function HeaderLinks(props) {
             buttonIcon={AccountCircle}
             dropdownList={[
               <Link href="/profile">
-                <a className={classes.navLink}><Icon className={classes.icons}>assignment_ind</Icon>&nbsp; My Account</a>
+                <a href="/profile" className={classes.navLink}><Icon className={classes.icons}>assignment_ind</Icon>&nbsp; My Account</a>
               </Link>,
               <Link href="/orders">
-                <a className={classes.navLink}><Icon className={classes.icons}>event</Icon>&nbsp; My Tickets</a>
+                <a href="/profile" className={classes.navLink}><Icon className={classes.icons}>event</Icon>&nbsp; My Tickets</a>
               </Link>,
               mySelling,
               <Button

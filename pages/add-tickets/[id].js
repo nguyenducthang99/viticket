@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { toast } from 'react-toastify';
 import axios from "axios";
+import { useQuery, useLazyQuery } from '@apollo/client';
 
 import { format, set, compareAsc } from 'date-fns';
 import { useSelector } from 'react-redux';
+import client from 'services/index.js'
+import { eventTickets, eventTicketTypes } from 'services/event.js'
 
 import Icon from "@material-ui/core/Icon";
 // nodejs library that concatenates classes
@@ -28,6 +32,9 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
+
+import InputAdornment from "@material-ui/core/InputAdornment";
+import CustomInput from "components/public/CustomInput/CustomInput.js";
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -78,6 +85,15 @@ export default function AddTicketsPage(props) {
   const [categoriesEvent, setCategoriesEvent] = useState([]);
   const [categories, setCategories] = useState({});
   const [activeDetail, setActiveDetail] = useState(null);
+  const [ticketType, setTicketType] = useState(['Normal', 'Hight'])
+  const init = {
+    chosenType: ticketType[0],
+    enterType: '',
+    price: 0,
+    amount: 0,
+    prefix: '',
+  };
+  const [ticketState, setTicketState] = useState(init);
 
   const initialDetailState = {
     FK_iMaLoaive: null,
@@ -86,9 +102,27 @@ export default function AddTicketsPage(props) {
     iTrangThai: "",
   };
   const [editAddTicket, setEditAddTicket] = useState(initialDetailState);
+  const [mapTicketsType, setMapTicketsType] = useState({});
 
   const userInfo = useSelector((state) => state.user.userInfo);
   const router = useRouter();
+
+  const [getTicketTypes] = useLazyQuery(eventTicketTypes, {
+    client: client,
+    onCompleted: (data) => {
+      if (data.ticketsTypeEvent) {
+        const newMapTicketsType = {};
+        data.ticketsTypeEvent.forEach(type => {
+          newMapTicketsType[`${type.FK_iMaCTSuKien}`] ? newMapTicketsType[`${type.FK_iMaCTSuKien}`].push(type) : newMapTicketsType[`${type.FK_iMaCTSuKien}`] = [type];
+        })
+        setMapTicketsType(newMapTicketsType);
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (eventInfo?.eventDetails) getTicketTypes({ variables: { sub_event_ids: eventInfo.eventDetails.map((detail) => detail.PK_iMaCTSuKien.toString()) } })
+  }, [eventInfo?.eventDetails])
 
   useEffect(() => {
     if (userInfo) {
@@ -142,7 +176,6 @@ export default function AddTicketsPage(props) {
       .then((res) => {
         if (res.status === 200 && res.data) {
           setEventInfo(res.data)
-          console.log(res.data)
           getEventCategories();
         }
       })
@@ -173,7 +206,6 @@ export default function AddTicketsPage(props) {
                       .map((cat) => {
                         return categories[cat.PK_iMaTheloai]
                       })
-    console.log(eventCat)
     return eventCat?.map((cat) => cat?.sTenTheloai).join(', ');
   }
 
@@ -181,6 +213,55 @@ export default function AddTicketsPage(props) {
     setOpenModal(true);
     setActiveDetail(detail);
   }
+
+  useEffect(() => {
+    if (!isOpenModal) setTicketState(init);
+  }, [isOpenModal])
+
+  const handleOnCloseTicket = () => {
+    setOpenModal(false);
+  }
+
+  const handleOnSubmitTicket = () => {
+    let timestamps = new Date().getTime();
+    const newTicketType = {
+      PK_iMaLoaiVe: timestamps,
+      FK_iMaCTSuKien: activeDetail.PK_iMaCTSuKien,
+      sTenLoaiVe: ticketState.enterType || ticketState.chosenType,
+      iSoLuong: ticketState.amount,
+      iGiave: ticketState.price,
+      sPhanLoai: ticketState.prefix.trim(),
+    };
+
+    const listTicket = [];
+
+    for (let index = 0; index < ticketState.amount; index++) {
+      listTicket.push({
+        PK_iMaVe: timestamps++,
+        FK_iMaLoaiVe: newTicketType.PK_iMaLoaiVe,
+        sViTri: `${newTicketType.sPhanLoai}-${index}`,
+        iGiave: newTicketType.iGiave,
+        iTrangThai: 1,
+      });
+    }
+
+    axios.post(`${API_URL}/event/tao-loai-ve-event`, {
+      loaiVe: newTicketType, listVe: listTicket
+    })
+      .then(res => {
+        if (res.status === 200 && res.data) {
+          console.log(res.data);
+          toast.success(`Create tickets event successfully!`)
+          getTicketTypes({ variables: { sub_event_ids: eventInfo.eventDetails.map((detail) => detail.PK_iMaCTSuKien.toString()) } })
+        };
+      })
+      .catch(err => {
+        toast.error(`Somethings wrong when create event, please try again!`);
+        console.error(err);
+      })
+  }
+
+  const editable = new Date().getTime() < new Date(eventInfo?.dThoigianBatdau || 'today').getTime();
   
   if (!userInfo || !eventInfo) return null;
 
@@ -213,7 +294,7 @@ export default function AddTicketsPage(props) {
             <GridContainer>
               <GridItem md={3}>
                 <div className={classes.thumbnailWrapper}>
-                  <img src="https://s1.ticketm.net/dam/a/010/aa178e43-b5e8-44aa-bc2b-8c5975412010_1419701_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp" />
+                  <img src="https://images.baodantoc.vn/uploads/2021/Th%C3%A1ng%208/Ng%C3%A0y_16/Thanh/photo1626255844591-16262558446831291916611.jpg" />
                 </div>
               </GridItem>
               <GridItem md={9}>
@@ -234,7 +315,8 @@ export default function AddTicketsPage(props) {
                         <p><b>#&nbsp; Categories:</b> {getTheLoai(eventInfo.PK_iMaSukien)}</p>
                       </GridItem>
                       <GridItem md={12}>
-                        <p><b>#&nbsp; Description:</b> {eventInfo.sMota}</p>
+                        <p><b>#&nbsp; Description:</b></p>
+                        <p>{eventInfo.sMota}</p>
                       </GridItem>
                     </GridContainer>
                   </div>
@@ -256,13 +338,20 @@ export default function AddTicketsPage(props) {
                   <h3 className={classes.subEventTitle}>{detail.sThongTinChiTiet}</h3>
                 </GridItem>
                 <GridItem md={4}>
-                  <h5 className={classes.subEventStatus}>Status: {mapTrangThaiSuKien[detail.iTrangThai]}</h5>
+                  <h5 
+                    className={classes.subEventStatus}
+                    style={{
+                      color: detail.iTrangThai === 1 ? '#1976d2' : '#ED6C02',
+                    }}
+                  >
+                    {mapTrangThaiSuKien[detail.iTrangThai]}
+                  </h5>
                 </GridItem>
                 <GridItem md={4}>
                   <p><b>#&nbsp; Location: </b>{detail.sViTri}</p>
                 </GridItem>
                 <GridItem md={8}>
-                  <p><b>#&nbsp; Time: </b>start from {format(new Date(detail.dNgayToChuc), 'dd/MM/yyyy HH:ii')} - long {detail.iThoiLuong} minutes</p>
+                  <p><b>#&nbsp; Time: </b>start from {format(new Date(detail.dNgayToChuc), 'dd/MM/yyyy HH:mm')} - long {detail.iThoiLuong} minutes</p>
                 </GridItem>
                 <GridItem md={12}>
                   <TableContainer className={classes.customTable} component={Paper}>
@@ -275,15 +364,29 @@ export default function AddTicketsPage(props) {
                           <TableCell align="right">Sold</TableCell>
                           <TableCell align="right">Action</TableCell>
                         </TableRow>
-                        <TableRow>
-                          <TableCell colSpan={5} align="right">
-                            <Button size="sm" round color="info" onClick={() => onClickAddTicket(detail)}>
-                              <Icon className={classes.icons}>add</Icon> Add ticket
-                            </Button>
-                          </TableCell>
-                        </TableRow>
+                        {detail.iTrangThai === 1 && editable ? (
+                          <TableRow>
+                            <TableCell colSpan={5} align="right">
+                              <Button size="sm" round color="info" onClick={() => onClickAddTicket(detail)}>
+                                <Icon className={classes.icons}>add</Icon> Add ticket
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ) : null}
                       </TableHead>
                       <TableBody>
+                        {mapTicketsType[`${detail.PK_iMaCTSuKien}`] && mapTicketsType[`${detail.PK_iMaCTSuKien}`].map((type) => (
+                          <TableRow
+                            key={type.PK_iMaLoaiVe}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell>{type.sTenLoaiVe}</TableCell>
+                            <TableCell align="right">{type.iGiave}</TableCell>
+                            <TableCell align="right">{type.iGiave}</TableCell>
+                            <TableCell align="right">{type.iSoLuong}</TableCell>
+                            <TableCell align="right">{0}</TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -308,27 +411,117 @@ export default function AddTicketsPage(props) {
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <GridContainer>
               <GridItem md={6}>
-                <FormControl fullWidth className={classes.eventDescription}>
+                <FormControl fullWidth className={classes.ticketType}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    Ticket type
+                    Choose ticket type
                   </InputLabel>
                   <NativeSelect
                     inputProps={{
-                      value: '',
-                      onChange: (e) => setEditAddTicket({
-                        ...editAddTicket,
-                        FK_iMaLoaive: e.target.value,
+                      value: ticketState.chosenType,
+                      onChange: (e) => setTicketState({
+                        ...ticketState,
+                        chosenType: e.target.value,
                       }),
                       name: 'event-status',
                       id: 'event-status',
                     }}
                   >
-                    <option value={1}>Active</option>
-                    <option value={2}>Cancel</option>
+                    {ticketType.map((type) => <option value={type}>{type}</option>)}
                   </NativeSelect>
                 </FormControl>
               </GridItem>
               <GridItem md={6}>
+                <CustomInput
+                  labelText="Or enter ticket type"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    value: ticketState.enterType,
+                    onChange: (e) => setTicketState({
+                      ...ticketState,
+                      enterType: e.target.value,
+                    }),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Icon className={classes.icons}>drive_file_rename_outline</Icon>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </GridItem>
+              <GridItem md={4}>
+                <CustomInput
+                  labelText="Ticket type prefix"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    value: ticketState.prefix,
+                    onChange: (e) => setTicketState({
+                      ...ticketState,
+                      prefix: e.target.value,
+                    }),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Icon className={classes.icons}>horizontal_rule</Icon>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </GridItem>
+              <GridItem md={4}>
+                <CustomInput
+                  labelText="Amount"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    type: "number",
+                    min: 1,
+                    value: ticketState.amount,
+                    onChange: (e) => setTicketState({
+                      ...ticketState,
+                      amount: e.target.value,
+                    }),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Icon className={classes.icons}>bar_chart</Icon>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </GridItem>
+              <GridItem md={4}>
+                <CustomInput
+                  labelText="Price"
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  inputProps={{
+                    type: "number",
+                    min: 1,
+                    value: ticketState.price,
+                    onChange: (e) => setTicketState({
+                      ...ticketState,
+                      price: e.target.value,
+                    }),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Icon className={classes.icons}>money</Icon>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </GridItem>
+              <GridItem md={12} style={{ textAlign: "center" }}>
+                <Button round color="success" style={{ marginTop: "20px" }} onClick={handleOnSubmitTicket}>
+                  <Icon className={classes.icons}>check</Icon> &nbsp; Add ticket type
+                </Button>
+                &emsp;
+                <Button round color="default" style={{ marginTop: "20px" }} onClick={handleOnCloseTicket}>
+                  <Icon className={classes.icons}>close</Icon> &nbsp; Close
+                </Button>
               </GridItem>
             </GridContainer>
           </Typography>

@@ -9,5 +9,6 @@ router.get('/ids', event.getListEventsIds)
 
 router.post('/tao-su-kien', event.taoSuKien)
 router.post('/the-loai-event', event.theLoaiEvent)
+router.post('/tao-loai-ve-event', event.taoLoaiVeEvent)
 
 export default router

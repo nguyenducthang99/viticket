@@ -11,7 +11,6 @@ import Header from "components/public/Header/Header.js";
 import Footer from "components/public/Footer/Footer.js";
 import GridContainer from "components/public/Grid/GridContainer.js";
 import GridItem from "components/public/Grid/GridItem.js";
-import Button from "components/public/CustomButtons/Button.js";
 import HeaderLinks from "components/public/Header/HeaderLinks.js";
 import Parallax from "components/public/Parallax/Parallax.js";
 import TopSearch from "components/public/TopSearch/index.js";
@@ -19,9 +18,9 @@ import TopSearch from "components/public/TopSearch/index.js";
 import styles from "styles/jss/nextjs-material-kit/pages/landingPage.js";
 
 // Sections for this page
-import ProductSection from "pages-sections/LandingPage-Sections/ProductSection.js";
-import TeamSection from "pages-sections/LandingPage-Sections/TeamSection.js";
-import WorkSection from "pages-sections/LandingPage-Sections/WorkSection.js";
+import TopSellerSection from "pages-sections/LandingPage-Sections/TopSellerSection.js";
+import CategoriesSection from "pages-sections/LandingPage-Sections/CategoriesSection.js";
+import { getCategories } from 'services/event.js'
 
 const dashboardRoutes = [];
 
@@ -29,7 +28,7 @@ const useStyles = makeStyles(styles);
 
 export default function LandingPage(props) {
   const classes = useStyles();
-  const { ...rest } = props;
+  const { categories, ...rest } = props;
   return (
     <div>
       <Header
@@ -46,7 +45,7 @@ export default function LandingPage(props) {
       />
       <Parallax filter responsive image="/img/landing-bg.jpg">
         <div className={classes.container}>
-          <GridContainer>
+          <GridContainer className={classes.gridContainer}>
             <GridItem xs={12} sm={12} md={12}>
               <h1 className={classes.title}>Let's Make Live Happen.</h1>
               <h4>Shop millions of live events and discover can't-miss concerts, games, theater and more.</h4>
@@ -56,13 +55,20 @@ export default function LandingPage(props) {
         </div>
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classes.container}>
-          <ProductSection />
-          <TeamSection />
-          <WorkSection />
-        </div>
+          <CategoriesSection categories={categories} />
+          <TopSellerSection categories={categories} />
       </div>
       <Footer />
     </div>
   );
+}
+
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await getCategories();
+  const categories = res.data?.categories || [];
+
+  // Pass data to the page via props
+  return { props: { categories } }
 }

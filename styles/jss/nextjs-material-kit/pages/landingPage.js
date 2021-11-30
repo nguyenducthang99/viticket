@@ -5,6 +5,10 @@ const landingPageStyle = {
     zIndex: "12",
     color: "#FFFFFF",
     ...container,
+    paddingRight: "0px",
+  },
+  gridContainer: {
+    marginRight: "0px"
   },
   title: {
     ...title,

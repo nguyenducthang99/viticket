@@ -1,7 +1,9 @@
+import { API_ENDPOINT } from 'constants/commons.js'
+
 const ENV = 'DEV';
 
 export const getApiEndpointUrl = () => {
-    return 'http://localhost:4000/graphql'
+    return `${API_ENDPOINT}/graphql`
 };
 
 const getApiKey = () => {

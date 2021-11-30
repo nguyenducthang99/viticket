@@ -14,6 +14,8 @@ WORKDIR /app
 # to the /app working directory
 COPY package*.json /app
 
+RUN apk update && apk add bash
+
 # Install dependencies in /app
 RUN yarn install
 

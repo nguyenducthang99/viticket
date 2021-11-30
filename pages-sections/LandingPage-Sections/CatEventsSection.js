@@ -7,66 +7,6 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import client from "../../services";
 import { catEventsQuery, getCatEvents } from 'services/event.js'
 
-
-const temp = [
-  {
-    PK_iMaSukien: 1,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 2,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 3,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 4,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 5,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 6,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 7,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-  {
-    PK_iMaSukien: 8,
-    sTenSukien: 'Imagine Dragons',
-    sSlugSukien: 'imagine-dragons',
-    sLinkanh: 'https://s1.ticketm.net/dam/a/c96/5457b1ce-bffb-49ed-b9c0-b864bb2d3c96_1565391_TABLET_LANDSCAPE_LARGE_16_9.jpg?width=400&height=225&fit=crop&auto=webp',
-    eventDetails: [1, 2, 3, 4, 5]
-  },
-];
-
 const useStyles = makeStyles(styles);
 
 export default function ProductSection(props) {

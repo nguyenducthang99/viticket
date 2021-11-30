@@ -18,7 +18,7 @@ import HeaderLinks from "components/public/Header/HeaderLinks.js";
 import Parallax from "components/public/Parallax/Parallax.js";
 import TopSearch from "components/public/TopSearch/index.js";
 
-import styles from "styles/page/category.js";
+import styles from "./styles.js";
 
 const temp = [
     {
@@ -79,12 +79,14 @@ const temp = [
     },
   ];
   
+// Sections for this page
+import TopSellerSection from "pages-sections/LandingPage-Sections/TopSellerSection.js";
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-const CategoryPage = (props) => {
+export default function LandingPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
@@ -146,4 +148,3 @@ const CategoryPage = (props) => {
     </div>
   );
 }
-export default CategoryPage;

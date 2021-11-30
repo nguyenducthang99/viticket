@@ -52,7 +52,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
 import { API_URL } from "constants/commons.js";
-import styles from "styles/page/addTicket.js";
+import styles from "./styles.js";
 
 const useStyles = makeStyles(styles);
 
@@ -76,7 +76,7 @@ const style = {
   p: 4,
 };
 
-const AddTicketsPage = (props) => {
+export default function AddTicketsPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
   const { id } = props;
@@ -549,5 +549,3 @@ export async function getStaticProps(props) {
     },
   }
 }
-
-export default AddTicketsPage;

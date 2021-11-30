@@ -17,13 +17,14 @@ import Button from "components/public/CustomButtons/Button.js";
 import HeaderLinks from "components/public/Header/HeaderLinks.js";
 import Parallax from "components/public/Parallax/Parallax.js";
 import TopSearch from "components/public/TopSearch/index.js";
-import styles from "styles/page/event.js";
+
+import styles from "./styles.js";
 
 const dashboardRoutes = [];
 
 const useStyles = makeStyles(styles);
 
-const EventPage = (props) => {
+export default function LandingPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
 
@@ -68,5 +69,3 @@ const EventPage = (props) => {
     </div>
   );
 }
-
-export default EventPage;

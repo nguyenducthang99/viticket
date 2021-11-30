@@ -532,8 +532,8 @@ export default function AddTicketsPage(props) {
 }
 
 export async function getStaticPaths() {
-  // const res = await getEventIds();
-  const items = [];
+  const res = await getEventIds();
+  const items = res?.data || [];
   const paths = items.map((item) => ({
       params: { id: item.PK_iMaSukien.toString() },
   }));

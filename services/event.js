@@ -37,6 +37,17 @@ export const categoriesQuery = gql`
     }
 `;
 
+export const categoryQuery = gql`
+    query ($id: Int!) {
+		cat(id: $id) {
+			PK_iMaTheloai
+			sTenTheloai
+			sSlugTheloai
+			sLinkAnh
+        }
+    }
+`;
+
 export const catEventsQuery = gql`
     query ($id: Int!) {
 		catEventsId(id: $id) {
@@ -55,6 +66,9 @@ export const catEventsQuery = gql`
 
 export const getCategories = () => {
     return apiRequest(categoriesQuery);
+}
+export const getCat = (variables) => {
+    return apiRequest(categoryQuery, variables);
 }
 
 export const getCatEvents = (variables) => {
